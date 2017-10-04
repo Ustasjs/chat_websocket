@@ -24,15 +24,15 @@ module.exports = {
         loaders
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                drop_debugger: false
-            }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     sourceMap: true,
+        //     compress: {
+        //         drop_debugger: false
+        //     }
+        // }),
         new ExtractTextPlugin('styles.css'),
         new HtmlPlugin({
-            title: 'Loft School sample project',
+            title: 'Chat app',
             template: 'index.hbs'
         }),
         new CleanWebpackPlugin(['dist'])
