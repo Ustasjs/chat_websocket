@@ -13,28 +13,44 @@ loaders.push({
     })
 });
 
-module.exports = {
-    entry: './src/index.js',
-    output: {
-        filename: '[name].[hash].js',
-        path: path.resolve('dist')
+module.exports = [
+    {
+        entry: './src/index.js',
+        output: {
+            filename: '[name].[hash].js',
+            path: path.resolve('dist')
+        },
+        devtool: 'source-map',
+        module: {
+            loaders
+        },
+        plugins: [
+            // new webpack.optimize.UglifyJsPlugin({
+            //     sourceMap: true,
+            //     compress: {
+            //         drop_debugger: false
+            //     }
+            // }),
+            new ExtractTextPlugin('styles.css'),
+            new HtmlPlugin({
+                title: 'Chat app',
+                template: 'index.hbs'
+            }),
+            new CleanWebpackPlugin(['dist'])
+        ]
     },
-    devtool: 'source-map',
-    module: {
-        loaders
-    },
-    plugins: [
-        // new webpack.optimize.UglifyJsPlugin({
-        //     sourceMap: true,
-        //     compress: {
-        //         drop_debugger: false
-        //     }
-        // }),
-        new ExtractTextPlugin('styles.css'),
-        new HtmlPlugin({
-            title: 'Chat app',
-            template: 'index.hbs'
-        }),
-        new CleanWebpackPlugin(['dist'])
-    ]
-};
+    // {
+    //     entry: './src/server.js',
+    //     output: {
+    //         filename: '[name].[hash].js',
+    //         path: path.resolve('dist')
+    //     },
+    //     devtool: 'source-map',
+    //     module: {
+    //         loaders
+    //     },
+    //     plugins: [
+    //         new CleanWebpackPlugin(['dist'])
+    //     ]
+    // }
+];

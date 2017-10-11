@@ -1,0 +1,12 @@
+{{#each messages}}
+    <li class="message">
+        <img src="{{path}}" alt="user avatar" class="avatar message__img">
+        <div class="message__wrap">
+            <div class="message__head">
+                <span class="message__name" data-nick="{{nick}}">{{name}}</span>
+                <span class="message__time">{{time}}</span>
+            </div>
+            <div class="message__content">{{content}}</div>
+        </div>
+    </li>
+{{/each}}

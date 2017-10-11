@@ -1,15 +1,14 @@
 <div class="users__main">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPIJCYgpIQ0pmJ6-S96Hi2WnpTOHC3nFc_Ws5I5DZ56PbKJmXb" alt="user avatar" class="avatar users__avatar">
-    <span class="users__name">Добро пожаловать</span>
+    <img src="{{path}}" alt="user avatar" class="avatar users__avatar" id="userAvatar">
+    <span class="users__name">{{name}}</span>
 </div>
 <div class="users__wrap">
     <div class="users__title">Участники ({{number}})</div>
     <ul class="users__list">
+        {{#each users}}
         <li class="users__item">
-            Вася Пупкин
+            {{name}}
         </li>
-        <li class="users__item">
-            Леша Колпачков
-        </li>
+        {{/each}}
     </ul>
 </div>

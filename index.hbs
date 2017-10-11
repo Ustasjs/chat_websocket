@@ -5,19 +5,19 @@
   <title>{{htmlWebpackPlugin.options.title}}</title>
 </head>
 <body>
-    <aside class="users">
+    <aside class="users" id="users">
         <div class="users__main">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPIJCYgpIQ0pmJ6-S96Hi2WnpTOHC3nFc_Ws5I5DZ56PbKJmXb" alt="user avatar" class="avatar users__avatar">
+            <img src="./src/images/defaultAvatar.jpg" alt="user avatar" class="avatar users__avatar" id="userAvatar">
             <span class="users__name">Добро пожаловать</span>
         </div>
     </aside>
     <main class="main">
-        <ul class="main__window">
+        <ul class="main__window" id="messagesList">
         </ul>
         <div class="main__footer">
             <div class="main__footer-wrap">
-                <input type="text" class="input input_main" placeholder="Введите сообщение">
-                <button class="button button_main">Отправить</button>
+                <input type="text" class="input input_main" id="mainInput" placeholder="Введите сообщение">
+                <button class="button button_main" id="messageButton">Отправить</button>
             </div>
         </div>
     </main>
