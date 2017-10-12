@@ -116,6 +116,7 @@ new Promise((resolve, reject) => {
         };
 
         message.context = controller.appendMessage();
+        mainInput.value = '';
         socket.send(JSON.stringify(message));
     })
 
