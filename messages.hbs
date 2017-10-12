@@ -1,6 +1,8 @@
 {{#each messages}}
     <li class="message">
-        <img src="{{path}}" alt="user avatar" class="avatar message__img">
+        <div class="avatar__wrap">
+            <img src="{{path}}" alt="user avatar" class="avatar message__img">
+        </div>
         <div class="message__wrap">
             <div class="message__head">
                 <span class="message__name" data-nick="{{nick}}">{{name}}</span>

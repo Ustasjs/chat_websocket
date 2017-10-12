@@ -117,11 +117,14 @@ class Controller {
                 
                 reader.onload = function(e) {
                     img.src = e.target.result;
-                    model.currentUser.avatar = e.target.result;
                     
-                    let fileLoadButton = document.getElementById('fileLoadButton');
+                    let fileLoadButton = document.getElementById('fileLoadButton'),
+                        closeButton = document.getElementById('fileCanselButton'),
+                        result = e.target.result;
 
-                    function sendFile() {
+                    function sendFile(e) {
+                        model.currentUser.avatar = result;
+
                         let message = {
                             status: 'avatarUpload',
                             user: model.currentUser
@@ -134,11 +137,39 @@ class Controller {
                         socket.send(message);
 
                         fileLoadButton.removeEventListener('click', sendFile);
+                        document.removeEventListener('keydown', sendFileByEnter);
 
                         view.popUpRemove();
                     }
 
+                    function sendFileByEnter(e) {
+                        if (e.keyCode === 13) {
+                            model.currentUser.avatar = result;
+                            
+                            let message = {
+                                status: 'avatarUpload',
+                                user: model.currentUser
+                            };
+    
+                            view.avatarRender(model.currentUser.avatar);
+                            localAvatarReload();
+    
+                            message = JSON.stringify(message);
+                            socket.send(message);
+                            
+                            fileLoadButton.removeEventListener('click', sendFile);
+                            document.removeEventListener('keydown', sendFileByEnter);
+    
+                            view.popUpRemove();
+                        }
+                    }
+
                     fileLoadButton.addEventListener('click', sendFile);
+                    document.addEventListener('keydown', sendFileByEnter);
+                    closeButton.addEventListener('click', () => {
+                        fileLoadButton.removeEventListener('click', sendFile);
+                        document.removeEventListener('keydown', sendFileByEnter);
+                    })
                 }
             }
         })
@@ -158,6 +189,9 @@ class Controller {
                 break;
             case 'wrongType':
                 view.alertRender(model.alertWrongType);
+                break;
+            case 'emptyInput':
+                view.alertRender(model.alertEmptyInput);
                 break;
         }
     }
@@ -179,6 +213,7 @@ class Controller {
 
     updateMessagesHistory(context) {
         view.messagesRender(context);
+        this.scrollHandler();
     }
 
     appendMessage(context) {
@@ -188,7 +223,17 @@ class Controller {
         
         view.singleMessageRender(context);
 
+        this.scrollHandler();
+
         return context;
+    }
+
+    scrollHandler() {
+        let chatWindow = document.getElementById('messagesList'),
+            visibleHeight = chatWindow.offsetHeight,
+            trueHeight = chatWindow.scrollHeight;
+
+        chatWindow.scrollTop = trueHeight - visibleHeight;
     }
 }
 

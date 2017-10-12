@@ -148,36 +148,111 @@ webSocketServer.on('connection', function(ws) {
         }
 
         if (parsedData.status === 'avatarUpload') {
-            // set avatar to messagesHistory
-            for (let i = 0; i < history.messages.length; i++) {
-                if (history.messages[i].nick === parsedData.user.nick) {
-                    history.messages[i].path = parsedData.user.avatar;
-                }
-            }
+            // save avatar
+            let basePath = '../../src/server/server_modules/base/usersAvatars/',
+                randomName = Math.floor(Math.random() * (9999 - 1000)) + 1000,
+                path = basePath + parsedData.user.nick + '/' + randomName + '.jpg',
+                data = parsedData.user.avatar.replace(/^data:image\/\w+;base64,/, '');
 
-            fs.writeFile('./server_modules/base/history.json', JSON.stringify(history), (err) => {
-                if (err) {
-                    throw err;
+            new Promise((resolve) => {
+                // chek existing of file in the dir
+                fs.readdir(basePath + parsedData.user.nick, (err, files) => {
+                    if (err) {
+                        resolve('notFound')
+                    } else {
+                        resolve(files)
+                    }
+                })
+            })
+            .then((files) => {
+                // if exist remove the file
+                return new Promise((resolve, reject) => {
+                    if (files === 'notFound') {
+                        resolve('notFound')
+                    } else {
+                        fs.unlink(basePath + parsedData.user.nick + '/' +files[0], (err) => {
+                            if (err) {
+                                reject(err)
+                            } else {
+                                resolve()
+                            }
+                        })
+                    }
+                })
+            })
+            .then((status) => {
+                // if exist delete dir
+                return new Promise((resolve, reject) => {
+                    if (status === 'notFound') {
+                        resolve()
+                    } else {
+                        fs.rmdir(basePath + parsedData.user.nick, (err) => {
+                            if (err) {
+                                reject(err)
+                            } else {
+                                resolve()
+                            }
+                        })
+                    }
+                })
+            })
+            .then(() => {
+                // make new dir
+                return new Promise((resolve, reject) => {
+                    fs.mkdir(basePath + parsedData.user.nick, (err) => {
+                        if (err) {
+                            reject(err)
+                        } else {
+                            resolve()
+                        }
+                    })
+                })
+            })
+            .then(() => {
+                // save the file
+                return new Promise((resolve, reject) => {
+                    fs.writeFile(path, data, 'base64', (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(path);
+                        }
+                    });
+                })
+            })
+            .then((path) => {
+                // set avatar to messagesHistory
+                for (let i = 0; i < history.messages.length; i++) {
+                    if (history.messages[i].nick === parsedData.user.nick) {
+                        history.messages[i].path = path;
+                    }
                 }
-            });
 
-            // set avatar to users base
-            for (let i = 0; i < allUsers.length; i++) {
-                if (allUsers[i].nick === parsedData.user.nick) {
-                    allUsers[i].avatar = parsedData.user.avatar;
+                fs.writeFile('./server_modules/base/history.json', JSON.stringify(history), (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                });
+
+                // set avatar to users base
+                for (let i = 0; i < allUsers.length; i++) {
+                    if (allUsers[i].nick === parsedData.user.nick) {
+                        allUsers[i].avatar = path;
+                    }
                 }
-            }
 
-            fs.writeFile('./server_modules/base/allUser.json', JSON.stringify(allUsers), (err) => {
-                if (err) {
-                    throw err;
-                }
-            });
+                fs.writeFile('./server_modules/base/allUser.json', JSON.stringify(allUsers), (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                });
 
-            // update messages history
-            updateMessagesHistory();
+                // update messages history
+                updateMessagesHistory();
+            }).catch((err) => {
+                console.log(err);
+            })
         }
-
     });
 
     ws.on('close', function() {

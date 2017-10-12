@@ -15,14 +15,13 @@ new Promise((resolve, reject) => {
 
     controller.init();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         // auth
 
         socket.onmessage = function(event) {
             let parsedData = JSON.parse(event.data);
     
             if (parsedData.status === 'authOk' || parsedData.status === 'userExist') {
-                console.log(parsedData);
                 controller.handleNewUser(parsedData);
                 // If user is logged in update messages history
                 if (parsedData.status === 'userExist') {
@@ -39,19 +38,27 @@ new Promise((resolve, reject) => {
         document.body.addEventListener('click', (e) => {
             // auth submit button
             if (e.target.classList.contains('button_auth')) {
+                e.preventDefault();
                 e.stopPropagation();
-                let data = {
-                    name: null,
-                    nick: null,
-                    status: null
-                };
-    
-                data.name = document.getElementById('name').value,
-                data.nick = document.getElementById('nick').value;
-                data.status = 'auth';
-                console.log(JSON.stringify(data));
-                
-                socket.send(JSON.stringify(data));
+
+                let nameInput = document.getElementById('name'),
+                    nickInput = document.getElementById('nick');
+
+                if (nameInput.value.length === 0 || nickInput.value.length === 0) {
+                    controller.handleAlert('emptyInput');
+                } else {
+                    let data = {
+                        name: null,
+                        nick: null,
+                        status: null
+                    };
+        
+                    data.name = nameInput.value,
+                    data.nick = nickInput.value;
+                    data.status = 'auth';
+                    
+                    socket.send(JSON.stringify(data));
+                }
             }
 
             // file loader cansel button
@@ -88,7 +95,6 @@ new Promise((resolve, reject) => {
         }
 
         if (parsedData.status === 'updateMessagesHistory') {
-            console.log(parsedData);
             controller.updateMessagesHistory(parsedData.history);
         }
     }
@@ -96,6 +102,14 @@ new Promise((resolve, reject) => {
     // main message button
 
     messageButton.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        let mainInput = document.getElementById('mainInput');
+
+        if (mainInput.value.length === 0) {
+            return
+        }
+
         let message = {
             status: 'newMessage',
             context: null

@@ -7,7 +7,9 @@
 <body>
     <aside class="users" id="users">
         <div class="users__main">
-            <img src="./src/images/defaultAvatar.jpg" alt="user avatar" class="avatar users__avatar" id="userAvatar">
+            <div class="avatar__wrap">
+                <img src="./src/images/defaultAvatar.jpg" alt="user avatar" class="avatar users__avatar" id="userAvatar">
+            </div>
             <span class="users__name">Добро пожаловать</span>
         </div>
     </aside>
@@ -15,10 +17,12 @@
         <ul class="main__window" id="messagesList">
         </ul>
         <div class="main__footer">
-            <div class="main__footer-wrap">
-                <input type="text" class="input input_main" id="mainInput" placeholder="Введите сообщение">
-                <button class="button button_main" id="messageButton">Отправить</button>
-            </div>
+            <form class="main__form" id="mainForm">
+                <div class="main__footer-wrap">
+                    <input type="text" class="input input_main" id="mainInput" placeholder="Введите сообщение" form="mainForm">
+                    <button class="button button_main" id="messageButton" type="submit">Отправить</button>
+                </div>
+            </form>
         </div>
     </main>
 </body>

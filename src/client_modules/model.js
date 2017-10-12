@@ -4,6 +4,7 @@ class Model {
         this.alertAlreadyOlnline = 'Пользователь с таким ником уже онлайн';
         this.alertWrongSize = 'Размер файла не должен превышать 512кб';
         this.alertWrongType = 'Файл должен быть в формате .jpg';
+        this.alertEmptyInput = 'Все поля обязательны для заполнения';
     }
     
     getCurrentUser(data) {
