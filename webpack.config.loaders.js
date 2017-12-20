@@ -11,6 +11,7 @@ module.exports = function() {
         },
         {
             test: /\.(jpe?g|png|gif|svg|)$/i,
+            exclude: [/fonts/],
             loader: 'file-loader?name=images/[hash].[ext]'
         },
         {
